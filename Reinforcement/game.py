@@ -44,9 +44,9 @@ class SnakeGameAI:
         self.clock = pygame.time.Clock()
         
         # init game state
-        self._reset()
+        self.reset()
 
-    def _reset(self):
+    def reset(self):
         self.direction = Direction.RIGHT
         
         self.head = Point(self.w/2, self.h/2)
