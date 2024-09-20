@@ -28,7 +28,6 @@ Point = namedtuple('Point', ['x', 'y'])
 
 class NeuronLayer:
     def __init__(self,canvas, n_nodes, XPos, canvas_height, PrevLayer: 'NeuronLayer' = None):
-        self.MaxLayer = 16   
         self.nodes = []
         self.canvas = canvas
         self.canvas_height = canvas_height
@@ -83,10 +82,14 @@ class NNVisualizer():
         #Create Layers
         Layer1 = NeuronLayer(canvas=self.canvas, n_nodes=n_Pt_1_Layer,XPos=Layer1XIdx, canvas_height=self.canvas_height)
         Layer2 = NeuronLayer(canvas=self.canvas, n_nodes=n_Pt_2_Layer,XPos=Layer2XIdx, canvas_height=self.canvas_height, PrevLayer=Layer1)
+        Layer2.NodeAttachments()
+
+
+        #First Layer Generation of Nodes
         
 
         #Connect First Layer to Second
-        Layer2.NodeAttachments()
+        
         
     def run(self):
         # Start the Tkinter event loop
