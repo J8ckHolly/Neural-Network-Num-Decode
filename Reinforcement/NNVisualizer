@@ -23,26 +23,46 @@ class Node:
     def Activate(self):
         pass
 
+class SeparationDot:
+    def __init__(self, canvas, focus, radius=7):
+        self.canvas = canvas
+        self.focus = focus
+        canvas.create_oval(focus.x - radius, focus.y - radius, focus.x + radius, focus.y + radius, fill='grey')
+
 
 Point = namedtuple('Point', ['x', 'y'])
 
 class NeuronLayer:
+    
     def __init__(self,canvas, n_nodes, XPos, canvas_height, PrevLayer: 'NeuronLayer' = None):
-        self.MaxLayer = 16   
+        self.MaxNumNodes = 16   
         self.nodes = []
         self.canvas = canvas
+        # Create a Text box
+        text_box = tk.Text(self.canvas, height=10, width=40)
+        text_box.insert(tk.END, "Hi")
         self.canvas_height = canvas_height
-        self.YPositions = self.GenerateIndexs(n_nodes)
         self.XPos = XPos
         self.PrevLayer = PrevLayer
-        if self.PrevLayer:
-            for YCords in self.YPositions:
-                self.nodes.append(Node(self.canvas, focus=Point(x=self.XPos, y=YCords), node=PrevLayer.nodes))
-        else:
-            for YCords in self.YPositions:
-                self.nodes.append(Node(self.canvas, focus=Point(x=self.XPos, y=YCords)))
+        self.YPositions = self.GenerateIndexs(n_nodes)
+        ExcessNodeFlag= False
+        if(n_nodes > self.MaxNumNodes):
+            ExcessNodeFlag = True
+
+        for index, YCords in enumerate(self.YPositions):
+            if(ExcessNodeFlag and (index == 8 or index == 9 or index == 10 )):
+                SeparationDot(self.canvas, focus=Point(x=self.XPos, y=YCords))
+            else:
+                if self.PrevLayer:
+                    self.nodes.append(Node(self.canvas, focus=Point(x=self.XPos, y=YCords), node=PrevLayer.nodes))
+                else:
+                    self.nodes.append(Node(self.canvas, focus=Point(x=self.XPos, y=YCords)))
+
 
     def GenerateIndexs(self, nPoints):
+        #Generate Max of 16 points plus 3 separation dot coordinates
+        if(nPoints > self.MaxNumNodes):
+            nPoints = 19
         nPtList = []
         separation = self.canvas_height // (nPoints + 1)
         index = 0
@@ -73,7 +93,7 @@ class NNVisualizer():
 
         #How many Nodes in each layer
         n_Pt_1_Layer = 11
-        n_Pt_2_Layer = 16
+        n_Pt_2_Layer = 17
 
         #Creating X Positions
         Layer1XIdx = 200
@@ -83,7 +103,7 @@ class NNVisualizer():
         #Create Layers
         Layer1 = NeuronLayer(canvas=self.canvas, n_nodes=n_Pt_1_Layer,XPos=Layer1XIdx, canvas_height=self.canvas_height)
         Layer2 = NeuronLayer(canvas=self.canvas, n_nodes=n_Pt_2_Layer,XPos=Layer2XIdx, canvas_height=self.canvas_height, PrevLayer=Layer1)
-        
+        #mydot = SeparationDot(self.canvas, Point(x=250,y=250))
 
         #Connect First Layer to Second
         Layer2.NodeAttachments()
