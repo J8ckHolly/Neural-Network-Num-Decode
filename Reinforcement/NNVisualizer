@@ -39,8 +39,8 @@ class NeuronLayer:
         self.nodes = []
         self.canvas = canvas
         # Create a Text box
-        text_box = tk.Text(self.canvas, height=10, width=40)
-        text_box.insert(tk.END, "Hi")
+        text_box = tk.Text(self.canvas, height=1, width=4)
+        text_box.insert(tk.END, f"+{n_nodes-16}")
         self.canvas_height = canvas_height
         self.XPos = XPos
         self.PrevLayer = PrevLayer
@@ -52,6 +52,8 @@ class NeuronLayer:
         for index, YCords in enumerate(self.YPositions):
             if(ExcessNodeFlag and (index == 8 or index == 9 or index == 10 )):
                 SeparationDot(self.canvas, focus=Point(x=self.XPos, y=YCords))
+                if(index ==9):
+                    self.canvas.create_window(self.XPos+30,YCords,window=text_box)
             else:
                 if self.PrevLayer:
                     self.nodes.append(Node(self.canvas, focus=Point(x=self.XPos, y=YCords), node=PrevLayer.nodes))
@@ -93,7 +95,7 @@ class NNVisualizer():
 
         #How many Nodes in each layer
         n_Pt_1_Layer = 11
-        n_Pt_2_Layer = 17
+        n_Pt_2_Layer = 300
 
         #Creating X Positions
         Layer1XIdx = 200
